@@ -31,6 +31,7 @@ CREATE TABLE "usuario" (
     "id" TEXT NOT NULL,
     "rol" VARCHAR(30) NOT NULL,
     "nombre" VARCHAR(50) NOT NULL,
+    "apellido" VARCHAR(50) NOT NULL,
     "username" VARCHAR(30) NOT NULL,
     "tipo_documento" VARCHAR(20),
     "num_documento" VARCHAR(20),

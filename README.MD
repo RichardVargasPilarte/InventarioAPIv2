@@ -82,6 +82,10 @@ Sigue estos pasos para configurar el proyecto localmente:
    npx prisma migrate dev
    ```
 
+  ```bash
+   npx prisma generate
+   ```
+
 6. **Inicia el servidor:**
 
    ```bash
