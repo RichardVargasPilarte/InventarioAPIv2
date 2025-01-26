@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Articulo {
+  id           String   @id @default(uuid()) 
+  categoria_id String
+  categoria    Categoria @relation(fields: [categoria_id], references: [id])
+  codigo       String?   @db.VarChar(64)
+  nombre       String    @unique @db.VarChar(50)
+  descripcion  String?   @db.VarChar(255)
+  precio_venta Float
+  stock        Int
+  estado       Int       @default(1)
+  createdAt    DateTime  @default(now())
+  eliminado    String    @default("NO")
+
+  @@map("articulo")
+}
+
+model Categoria {
+  id          String   @id @default(uuid())
+  nombre      String   @unique @db.VarChar(50)
+  descripcion String?  @db.VarChar(255)
+  estado      Int      @default(1)
+  createdAt   DateTime @default(now())
+  eliminado   String    @default("NO")
+
+  @@map("categoria")
+  articulos   Articulo[] // Relación inversa con Articulo
+}
+
+model Usuario {
+  id              String   @id @default(uuid()) 
+  rol             String   @db.VarChar(30)
+  nombre          String   @db.VarChar(50)
+  username        String   @unique @db.VarChar(30)
+  tipo_documento  String?  @db.VarChar(20)
+  num_documento   String?  @db.VarChar(20)
+  direccion       String?  @db.VarChar(70)
+  telefono        String   @unique @db.VarChar(20)
+  email           String   @unique @db.VarChar(50)
+  password        String   @db.VarChar(64)
+  estado          Int      @default(1)
+  createdAt       DateTime @default(now())
+  eliminado       String   @default("NO")
+
+  @@map("usuario")
+}
