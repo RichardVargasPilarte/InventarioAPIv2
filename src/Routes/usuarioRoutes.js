@@ -14,6 +14,8 @@ router.post('/', [
         .isLength({ max: 30 }).withMessage('El rol no puede tener más de 30 caracteres'),
     body('nombre').notEmpty().withMessage('El campo nombre es obligatorio')
         .isLength({ max: 50 }).withMessage('El nombre no puede tener más de 50 caracteres'),
+    body('apellido').notEmpty().withMessage('El campo apellido es obligatorio')
+        .isLength({ max: 50 }).withMessage('El apellido no puede tener más de 50 caracteres'),
     body('username').notEmpty().withMessage('El campo username es obligatorio')
         .isLength({ max: 30 }).withMessage('El username no puede tener más de 30 caracteres'),
     body('email').isEmail().withMessage('El campo email debe ser un correo válido')
