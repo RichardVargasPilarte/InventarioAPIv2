@@ -62,6 +62,7 @@ export const crearUsuario = async (req, res) => {
     try {
         const { username, email, telefono, password, ...data } = req.body;
 
+        // Verificar si ya existe un usuario con username, email o teléfono
         const usuarioExistente = await prisma.usuario.findFirst({
             where: {
                 OR: [
@@ -80,14 +81,15 @@ export const crearUsuario = async (req, res) => {
                 return res.status(400).json({ message: 'El correo electrónico ya está registrado.' });
             }
             if (usuarioExistente.telefono === telefono) {
-                return res.status(400).json({ message: 'El numero de telefono ya está registrado.' });
+                return res.status(400).json({ message: 'El número de teléfono ya está registrado.' });
             }
         }
 
-        // Encriptar la contraseña antes de crear el usuario
+        // Encriptar la contraseña antes de guardar el usuario
         const salt = bcrypt.genSaltSync();
         const hashedPassword = bcrypt.hashSync(password, salt);
 
+        // Crear el usuario
         const usuario = await usuarioClient.create({
             data: {
                 username,
@@ -96,19 +98,29 @@ export const crearUsuario = async (req, res) => {
                 password: hashedPassword,
                 ...data
             }
-        })
+        });
 
-        const token = await generarJWT(usuario.id);
+        // Generar el token
+        const token = await generarJWT({
+            id: usuario.id,
+            nombre: usuario.nombre,
+            apellido: usuario.apellido,
+            telefono: usuario.telefono,
+            roles: usuario.rol,
+            username: usuario.username,
+            email: usuario.email
+        });
 
+        // Respuesta exitosa
         res.status(201).json({
-            data: transformToUid(usuario), // Cambiar id a uid
+            data: transformToUid(usuario),
             token
         });
     } catch (error) {
         console.error('Error al crear usuario:', error.message);
-        res.status(500).send({
-            message: 'Ocurrió un error',
+        res.status(500).json({
+            message: 'Ocurrió un error al crear el usuario.',
             error: error.message
         });
     }
-}
+};
